@@ -1,0 +1,10 @@
+---
+- name: Display message
+  debug:
+    var: role_msg.split('\n')
+
+- name: List GitHub repositories
+  include_tasks: "github_list_repositories.yml"
+  vars:
+    git_user: "prometeo-cloud"
+...

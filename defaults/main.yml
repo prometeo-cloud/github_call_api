@@ -1,0 +1,6 @@
+---
+role_msg: |
+  Note:
+    This role is a collection of plays that call the GitHub api.
+    The 'main.yml' file is designed to be used with Molecule for testing only.
+...

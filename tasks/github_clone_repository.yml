@@ -1,0 +1,34 @@
+# Usage:
+#
+#  - name: Clone repository from GitHub
+#    include_role:
+#      name: github_call_api
+#      tasks_from: github_clone_repository
+#    vars:
+#      git_repository_url: "https://github.com/prometeo-cloud/proto-role"
+#      git_clone_folder: "~/Repositories/"
+#
+---
+- name: Get repository name
+  set_fact:
+    git_repository_name: "{{ git_repository_url | basename }}"
+
+- name: Check repository exists before cloning
+  stat:
+    path: "{{ git_clone_folder }}/{{ git_repository_name }}"
+  register: repo_exists
+
+- name: Create repository
+  block:
+    - name: Create repository folder
+      file:
+        path: "{{ git_clone_folder }}/{{ git_repository_name }}"
+        state: directory
+        mode: 0777
+
+    - name: Clone GitHub repository {{ git_repository_name }}
+      git:
+        repo: "{{ git_repository_url }}.git"
+        dest: "{{ git_clone_folder }}/{{ git_repository_name }}"
+  when: repo_exists.stat.exists == false
+...

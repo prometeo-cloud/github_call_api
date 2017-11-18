@@ -1,0 +1,26 @@
+# Usage:
+#
+#  - name: Generate list of GitHub repositories for {{ github_user }}
+#    include_role:
+#      name: github_call_api
+#      tasks_from: github_list_repositories
+#    vars:
+#      git_user: "prometeo-cloud"
+#
+---
+- name: Install Jmespath for parsing JSON
+  pip:
+    name: jmespath
+
+- name: Get list of GitHub repositories for {{ git_user }}
+  uri:
+    url: "https://api.github.com/users/{{ git_user }}/repos"
+  register: results
+
+- name: Extract repository URLs
+  set_fact:
+    git_repository_list: "{{ results.json | json_query('[].html_url') }}"
+
+- debug:
+    var: git_repository_list
+...
